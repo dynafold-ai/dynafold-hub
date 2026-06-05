@@ -83,11 +83,24 @@ predictions_data: list[dict] = []
 
 if use_demo:
     # Load demo files from examples directory
-    demo_dir = Path(__file__).parent.parent.parent.parent.parent / "examples" / "01_consensus_demo"
-    if not demo_dir.exists():
+    # Search multiple candidate locations (HF Spaces vs local dev)
+    here = Path(__file__).resolve()
+    candidates = [
+        # HF Spaces: pages/ at root, examples/ alongside
+        here.parent.parent / "examples" / "01_consensus_demo",
+        # Local dev: pages inside src/dynafold_hub/ui/, walk up 5 levels
+        here.parent.parent.parent.parent.parent / "examples" / "01_consensus_demo",
+        # Working directory fallback
+        Path.cwd() / "examples" / "01_consensus_demo",
+        # /app root (Docker container)
+        Path("/app") / "examples" / "01_consensus_demo",
+    ]
+    demo_dir = next((p for p in candidates if p.exists()), None)
+    if demo_dir is None:
         st.error(
-            f"Demo data not found at {demo_dir}. "
-            "Run `python examples/01_consensus_demo/generate_example_data.py` first."
+            "Demo data not found. Tried these paths:\n\n"
+            + "\n".join(f"- `{p}`" for p in candidates)
+            + "\n\nRun `python examples/01_consensus_demo/generate_example_data.py` first."
         )
         st.stop()
 
