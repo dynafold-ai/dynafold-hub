@@ -78,7 +78,7 @@ def list_available_adapters() -> list[dict]:
     Returns:
         List of dicts with adapter info (name, available, requires_gpu, etc.).
     """
-    adapters_to_check = []
+    adapters_to_check: list[type[BaseModelAdapter]] = []
 
     # Lazy import to avoid loading all dependencies
     try:

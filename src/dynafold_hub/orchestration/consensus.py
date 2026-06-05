@@ -199,7 +199,7 @@ class ConsensusEngine:
         ]
         if not confidences:
             return None
-        return np.mean(confidences, axis=0)
+        return np.asarray(np.mean(confidences, axis=0))
 
     def _find_divergent_regions(
         self,
