@@ -807,7 +807,7 @@ git push origin main  # Auto-deploys vía GitHub Actions
 ### Decisión 006: Destruir instancia Verda (no más infraestructura GPU pre-pagada)
 **Fecha**: 2026-05-24
 **Razón**: $42 restantes en cuenta. Costo idle $21/día. No tenemos uso justificado de GPU dedicada. Cuando necesitemos GPU (para Chai-1/Boltz-2 inference) usaremos GPU on-demand (Modal, RunPod).
-**Status**: ⏳ Pendiente acción del usuario en panel Verda
+**Status**: ✅ COMPLETADA — Sergio destruyó instancia el 2026-06-05. Saldo $42 preservado en cuenta Verda.
 
 ### Decisión 007: NO reusar pipeline GROMACS como producto principal
 **Fecha**: 2026-05-24
@@ -846,6 +846,27 @@ git push origin main  # Auto-deploys vía GitHub Actions
 **Razón**: Mantiene el branding original (DYNAFOLD) pero el sufijo "Hub" comunica la nueva propuesta (orquestación, no modelo único).
 **Alternativas consideradas**: BioStack, ModelMesh Bio, FoldOps
 **Status**: ✅ Aprobada (tentativa, podemos rebrandear si feedback negativo)
+
+### Decisión 011: Organización GitHub `dynafold-ai`
+**Fecha**: 2026-06-05
+**Decisor**: Sergio
+**Decisión**: Crear nueva organización GitHub `dynafold-ai` (en vez de usar cuenta personal SergioNotionHQ)
+**Razón**: Posicionamiento profesional desde el inicio. Más fácil para futuros co-founders, contributors, branding.
+**Status**: ✅ Aprobada. Sergio creará la organización antes del push.
+
+### Decisión 012: GitHub público se hace al COMPLETAR Semana 1
+**Fecha**: 2026-06-05
+**Decisor**: Sergio
+**Decisión**: NO publicar repositorio aún. Esperar a tener el MVP de Semana 1 completo (incluyendo al menos un adapter funcionalmente probado end-to-end).
+**Razón**: Mejor lanzar con producto demostrable que con código incompleto. Primera impresión importa.
+**Status**: ✅ Aprobada. Trabajamos local hasta completar Semana 1.
+
+### Decisión 013: Dominio dynafold.io diferido
+**Fecha**: 2026-06-05
+**Decisor**: Sergio
+**Decisión**: NO comprar dynafold.io ahora. Diferir a cuando lancemos públicamente.
+**Razón**: Sin web pública aún, no urge. Ahorrar $12 hasta tener algo en vivo.
+**Status**: ⏳ Diferida hasta lanzamiento público (estimado Semana 4).
 
 ### Cómo añadir nuevas decisiones
 Cuando tomemos una decisión nueva, añadir a esta sección con formato:
@@ -1197,17 +1218,30 @@ Cuando empieces una nueva sesión con este proyecto:
 
 ### Estado del proyecto al inicio (2026-05-24)
 
-| Item | Estado |
-|------|--------|
-| Plan estratégico | ✅ Este documento |
-| Repositorio GitHub | ⏳ Por crear |
-| Estructura local | ✅ Carpetas creadas |
-| Dominio dynafold.io | ⏳ Por comprar |
-| HuggingFace account | ⏳ Por verificar |
-| Servidor Verda | ⏳ Por destruir (acción de Sergio) |
-| Saldo Verda | $42 (preservar) |
-| Código MVP | 0% (empezar desde cero) |
-| Outreach a clientes | 0 conversaciones |
+| Item | Estado inicial | Estado actual (2026-06-05) |
+|------|----------------|---------------------------|
+| Plan estratégico | ✅ Este documento | ✅ Vigente |
+| Repositorio GitHub | ⏳ Por crear | ⏳ Diferido a fin Semana 1 |
+| Estructura local | ✅ Carpetas creadas | ✅ Completa con código |
+| Dominio dynafold.io | ⏳ Por comprar | ⏳ Diferido a lanzamiento público |
+| HuggingFace account | ⏳ Por verificar | ⏳ Aún sin confirmar |
+| Servidor Verda | ⏳ Por destruir | ✅ DESTRUIDO 2026-06-05 |
+| Saldo Verda | $42 (preservar) | ✅ $42 preservados |
+| Código MVP | 0% | ⏳ 40% (scaffold + base + skeleton adapters) |
+| Tests unit | 0% | ✅ 28/28 passing |
+| CI/CD | 0% | ✅ GitHub Actions configurado |
+| GitHub org `dynafold-ai` | — | ⏳ Pendiente crear |
+| Outreach a clientes | 0 | 0 (post-MVP) |
+
+### Progreso Semana 1 (actualizado 2026-06-05)
+
+- [x] Día 1-2: Setup proyecto, Poetry, estructura
+- [x] Día 3-4: BaseModelAdapter + tipos estandarizados + tests
+- [ ] Día 5-7: Chai1Adapter funcional end-to-end ← **EN CURSO**
+- [x] CLI funcional (info, predict skeleton)
+- [x] CI configurado
+- [x] Documentación completa (CLAUDE.md, README.md, WEEK_1_EXECUTION_PLAN.md)
+- [ ] Push a GitHub público (al completar Semana 1)
 
 ### Próxima sesión (cuando se retome)
 

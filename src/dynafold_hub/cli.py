@@ -6,6 +6,7 @@ Examples:
     dynafold info                          # List available adapters
     dynafold predict MGKLSTAA              # Predict structure
     dynafold predict-file input.fasta      # Predict from FASTA file
+    dynafold compare af3.pdb chai.pdb      # Cross-model consensus analysis
     dynafold launch-ui                     # Launch Streamlit web app
 """
 
@@ -26,7 +27,12 @@ from dynafold_hub.adapters import (
     get_adapter,
     list_available_adapters,
 )
-from dynafold_hub.utils import parse_fasta, validate_protein_sequence
+from dynafold_hub.orchestration import ConsensusEngine
+from dynafold_hub.utils import (
+    load_multiple_predictions,
+    parse_fasta,
+    validate_protein_sequence,
+)
 
 app = typer.Typer(
     name="dynafold",
@@ -193,6 +199,135 @@ def launch_ui(
             str(port),
         ]
     )
+
+
+@app.command()
+def compare(
+    files: list[Path] = typer.Argument(
+        ...,
+        help="2+ structure files (PDB/CIF) from different models",
+    ),
+    names: str = typer.Option(
+        "",
+        "--names",
+        "-n",
+        help="Comma-separated model names (e.g., 'af3,chai-1,boltz-2'). Default: from filenames",
+    ),
+) -> None:
+    """Cross-model consensus analysis.
+
+    Compare structure predictions from 2+ models. Identifies where models
+    agree (high confidence) and where they disagree (regions needing
+    experimental validation).
+
+    This is the UNIQUE VALUE of DYNAFOLD Hub: no other tool gives you
+    automatic cross-model agreement analysis with experimental recommendations.
+
+    Example:
+        dynafold compare af3.pdb chai1.pdb boltz2.pdb --names "af3,chai-1,boltz-2"
+    """
+    if len(files) < 2:
+        console.print("[red]Need at least 2 structure files for comparison[/]")
+        raise typer.Exit(1)
+
+    # Validate files exist
+    for f in files:
+        if not f.exists():
+            console.print(f"[red]File not found: {f}[/]")
+            raise typer.Exit(1)
+
+    # Parse model names
+    model_names = None
+    if names:
+        model_names = [n.strip() for n in names.split(",")]
+        if len(model_names) != len(files):
+            console.print(
+                f"[red]Number of names ({len(model_names)}) "
+                f"must match number of files ({len(files)})[/]"
+            )
+            raise typer.Exit(1)
+
+    console.print(
+        Panel(
+            f"[bold cyan]Cross-Model Consensus Analysis[/]\n" f"Comparing {len(files)} predictions",
+            border_style="cyan",
+        )
+    )
+
+    # Load predictions
+    try:
+        with console.status("[bold green]Loading structures..."):
+            predictions = load_multiple_predictions(files, model_names=model_names)
+    except Exception as e:
+        console.print(f"[red]Failed to load predictions: {e}[/]")
+        raise typer.Exit(1) from e
+
+    console.print(f"[green]✓[/] Loaded {len(predictions)} structure(s)")
+    for pred in predictions:
+        console.print(
+            f"  • [cyan]{pred.model_name}[/]: {pred.n_residues} residues, {pred.n_atoms} atoms"
+        )
+
+    # Run consensus
+    try:
+        with console.status("[bold green]Computing consensus..."):
+            engine = ConsensusEngine()
+            result = engine.compare(predictions)
+    except Exception as e:
+        console.print(f"[red]Consensus failed: {e}[/]")
+        raise typer.Exit(1) from e
+
+    # Display results
+    console.print("\n" + "─" * 70)
+
+    # Trust Score Panel
+    trust_color = (
+        "green" if result.trust_score > 80 else "yellow" if result.trust_score > 50 else "red"
+    )
+    trust_emoji = "✓" if result.trust_score > 80 else "⚠" if result.trust_score > 50 else "✗"
+    console.print(
+        Panel(
+            f"[bold {trust_color}]{trust_emoji} TRUST SCORE: {result.trust_score:.1f}/100[/]\n\n"
+            f"Models compared: {', '.join(result.models_compared)}\n"
+            f"Residues analyzed: {result.n_residues}\n"
+            f"Global RMSD: {result.global_rmsd:.2f} Å\n"
+            f"Agreement: {result.agreement_fraction * 100:.1f}% of residues",
+            title="Consensus Result",
+            border_style=trust_color,
+        )
+    )
+
+    # Divergent regions table
+    if result.divergent_regions:
+        console.print(
+            f"\n[bold yellow]⚠ {len(result.divergent_regions)} Divergent Region(s) Detected:[/]\n"
+        )
+        table = Table(show_header=True, header_style="bold magenta")
+        table.add_column("Residues", style="cyan")
+        table.add_column("Severity")
+        table.add_column("Max Displacement", justify="right")
+        table.add_column("Mean Confidence", justify="right")
+
+        for region in result.divergent_regions[:10]:
+            severity_color = {
+                "critical": "red",
+                "moderate": "yellow",
+                "minor": "blue",
+            }[region.severity]
+            table.add_row(
+                f"{region.residue_range[0]}-{region.residue_range[1]}",
+                f"[{severity_color}]{region.severity.upper()}[/]",
+                f"{region.max_displacement_angstroms:.2f} Å",
+                f"{region.mean_confidence:.1f}",
+            )
+        console.print(table)
+    else:
+        console.print("\n[green]✓ All models agree. No critical validation needed.[/]")
+
+    # Recommendations
+    console.print("\n[bold cyan]📋 Recommendations:[/]")
+    for rec in result.recommendations:
+        console.print(f"  {rec}")
 
 
 def main() -> int:

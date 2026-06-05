@@ -56,10 +56,10 @@ all = [
 dynafold = "dynafold_hub.cli:app"
 
 [project.urls]
-Homepage = "https://github.com/SergioNotionHQ/dynafold-hub"
-Documentation = "https://github.com/SergioNotionHQ/dynafold-hub#readme"
-Repository = "https://github.com/SergioNotionHQ/dynafold-hub"
-Issues = "https://github.com/SergioNotionHQ/dynafold-hub/issues"
+Homepage = "https://github.com/dynafold-ai/dynafold-hub"
+Documentation = "https://github.com/dynafold-ai/dynafold-hub#readme"
+Repository = "https://github.com/dynafold-ai/dynafold-hub"
+Issues = "https://github.com/dynafold-ai/dynafold-hub/issues"
 
 [tool.poetry]
 packages = [{include = "dynafold_hub", from = "src"}]

@@ -17,7 +17,7 @@ Sergio debe confirmar:
 - [ ] Dominio dynafold.io comprado (opcional pero recomendado, ~$12/año)
 - [ ] HuggingFace account creada (gratis)
 - [ ] OpenAI API key (opcional, para futuras integraciones)
-- [ ] Decisión: ¿queremos `dynafold-ai/dynafold-hub` o `SergioNotionHQ/dynafold-hub`?
+- [x] Decisión confirmada: usar organización `dynafold-ai` (creada por Sergio)
 
 Claude debe verificar:
 
@@ -169,7 +169,7 @@ EOF
 # Asumiendo username de Sergio en GitHub
 # Confirmar primero con él
 
-gh repo create SergioNotionHQ/dynafold-hub \
+gh repo create dynafold-ai/dynafold-hub \
     --public \
     --description "Unified platform for open-source AI drug discovery models" \
     --source=. \
@@ -177,12 +177,12 @@ gh repo create SergioNotionHQ/dynafold-hub \
     --push
 
 # Configurar topics
-gh api repos/SergioNotionHQ/dynafold-hub \
+gh api repos/dynafold-ai/dynafold-hub \
     --method PATCH \
     --field topics='["drug-discovery","ai","alphafold","protein-structure","chai-discovery","bioinformatics","machine-learning","python"]'
 ```
 
-**Done cuando**: Repo público accesible en https://github.com/SergioNotionHQ/dynafold-hub
+**Done cuando**: Repo público accesible en https://github.com/dynafold-ai/dynafold-hub
 
 ---
 
@@ -608,7 +608,7 @@ dynafold = "dynafold_hub.cli:app"
 
 Al final de la semana 1 debemos tener:
 
-- [ ] **Repositorio GitHub público** en https://github.com/SergioNotionHQ/dynafold-hub
+- [ ] **Repositorio GitHub público** en https://github.com/dynafold-ai/dynafold-hub
 - [ ] **CI funcionando**: lint + tests pasan en GitHub Actions
 - [ ] **`BaseModelAdapter`** implementado con tests
 - [ ] **`Chai1Adapter`** funcionando end-to-end
