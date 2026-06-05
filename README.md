@@ -4,9 +4,11 @@
 >
 > Access AlphaFold 3, Chai-1, Chai-2, Boltz-2, RFdiffusion, ProteinMPNN, ESM3 and more — all from one place. Compare predictions across models. Build custom workflows. No infrastructure setup required.
 
+[![CI](https://github.com/dynafold-ai/dynafold-hub/actions/workflows/ci.yml/badge.svg)](https://github.com/dynafold-ai/dynafold-hub/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Status: Pre-Alpha](https://img.shields.io/badge/status-pre--alpha-orange)](https://github.com/dynafold-ai/dynafold-hub)
+[![GitHub stars](https://img.shields.io/github/stars/dynafold-ai/dynafold-hub?style=social)](https://github.com/dynafold-ai/dynafold-hub)
 
 ---
 

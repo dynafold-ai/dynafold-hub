@@ -868,6 +868,14 @@ git push origin main  # Auto-deploys vía GitHub Actions
 **Razón**: Sin web pública aún, no urge. Ahorrar $12 hasta tener algo en vivo.
 **Status**: ⏳ Diferida hasta lanzamiento público (estimado Semana 4).
 
+### Decisión 014: Repositorio público en GitHub
+**Fecha**: 2026-06-05
+**Decisor**: Sergio
+**Decisión**: Push completo del MVP a `dynafold-ai/dynafold-hub` como repo público.
+**Razón**: Semana 1 lo suficiente avanzada (Consensus Engine + UI + tests). Hace más visible el proyecto para contributors potenciales y para posicionar marca.
+**URL**: https://github.com/dynafold-ai/dynafold-hub
+**Status**: ✅ COMPLETADO 2026-06-05. CI verde tras fix de mypy. 5 issues de roadmap creados.
+
 ### Cómo añadir nuevas decisiones
 Cuando tomemos una decisión nueva, añadir a esta sección con formato:
 ```
@@ -1237,11 +1245,18 @@ Cuando empieces una nueva sesión con este proyecto:
 
 - [x] Día 1-2: Setup proyecto, Poetry, estructura
 - [x] Día 3-4: BaseModelAdapter + tipos estandarizados + tests
-- [ ] Día 5-7: Chai1Adapter funcional end-to-end ← **EN CURSO**
-- [x] CLI funcional (info, predict skeleton)
-- [x] CI configurado
+- [x] ConsensusEngine + Structure Loader (el UNIQUE VALUE)
+- [x] CLI funcional (info, predict, compare, launch-ui)
+- [x] Streamlit UI (landing + Consensus Analyzer con upload + 3D viz)
+- [x] CI configurado y pasando ✅
 - [x] Documentación completa (CLAUDE.md, README.md, WEEK_1_EXECUTION_PLAN.md)
-- [ ] Push a GitHub público (al completar Semana 1)
+- [x] **Push a GitHub público — LIVE en https://github.com/dynafold-ai/dynafold-hub** ✅
+- [x] 5 roadmap issues creados públicos
+- [ ] Día 5-7: Integración real Chai-1 via Replicate API ← Esperando token
+- [ ] Deploy en HuggingFace Spaces
+
+### Semana 1: ~90% completa
+Falta solo: integración real Chai-1 (necesita Replicate token de Sergio)
 
 ### Próxima sesión (cuando se retome)
 
