@@ -173,8 +173,13 @@ def predict_file(
 @app.command(name="launch-ui")
 def launch_ui(
     port: int = typer.Option(8501, help="Port for Streamlit"),
+    headless: bool = typer.Option(False, "--headless", help="Don't auto-open browser"),
 ) -> None:
-    """Launch the DYNAFOLD Hub web UI (Streamlit)."""
+    """Launch the DYNAFOLD Hub web UI (Streamlit).
+
+    Opens a browser at http://localhost:8501 with the full DYNAFOLD Hub
+    web interface, including the Consensus Analyzer.
+    """
     try:
         import streamlit  # noqa: F401
     except ImportError as e:
@@ -185,20 +190,25 @@ def launch_ui(
 
     app_path = Path(__file__).parent / "ui" / "app.py"
     if not app_path.exists():
-        console.print(f"[yellow]UI not yet implemented at {app_path}[/]")
-        console.print("[dim]Coming in Week 2-3 of development.[/]")
-        raise typer.Exit(2)
+        console.print(f"[red]UI file missing at {app_path}[/]")
+        raise typer.Exit(1)
 
-    console.print(f"[green]Launching Streamlit on port {port}...[/]")
-    subprocess.run(
-        [
-            "streamlit",
-            "run",
-            str(app_path),
-            "--server.port",
-            str(port),
-        ]
-    )
+    console.print(f"[green]Launching DYNAFOLD Hub UI at http://localhost:{port}...[/]")
+    console.print("[dim]Press Ctrl+C to stop[/]\n")
+
+    cmd = [
+        "streamlit",
+        "run",
+        str(app_path),
+        "--server.port",
+        str(port),
+        "--browser.gatherUsageStats",
+        "false",
+    ]
+    if headless:
+        cmd.extend(["--server.headless", "true"])
+
+    subprocess.run(cmd)
 
 
 @app.command()
