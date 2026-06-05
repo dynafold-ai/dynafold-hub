@@ -1,0 +1,127 @@
+[project]
+name = "dynafold-hub"
+version = "0.1.0"
+description = "Unified platform for open-source AI drug discovery models"
+authors = [
+    {name = "Sergio León Martínez-Losa", email = "sergio@dynafold.io"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.11,<4.0"
+keywords = ["drug-discovery", "ai", "alphafold", "chai-discovery", "bioinformatics", "machine-learning"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    "pydantic>=2.5.0",
+    "numpy>=1.26.0,<2.0",
+    "pandas>=2.1.0",
+    "biotite>=0.41.0",
+    "gemmi>=0.6.5",
+    "typer>=0.9.0",
+    "rich>=13.7.0",
+    "requests>=2.31.0",
+    "tqdm>=4.66.0",
+]
+
+[project.optional-dependencies]
+ui = [
+    "streamlit>=1.30.0",
+    "py3Dmol>=2.0.4",
+    "plotly>=5.18.0",
+]
+api = [
+    "fastapi>=0.109.0",
+    "uvicorn[standard]>=0.27.0",
+]
+md = [
+    "MDAnalysis>=2.7.0",
+]
+all = [
+    "streamlit>=1.30.0",
+    "py3Dmol>=2.0.4",
+    "plotly>=5.18.0",
+    "fastapi>=0.109.0",
+    "uvicorn[standard]>=0.27.0",
+    "MDAnalysis>=2.7.0",
+]
+
+[project.scripts]
+dynafold = "dynafold_hub.cli:app"
+
+[project.urls]
+Homepage = "https://github.com/SergioNotionHQ/dynafold-hub"
+Documentation = "https://github.com/SergioNotionHQ/dynafold-hub#readme"
+Repository = "https://github.com/SergioNotionHQ/dynafold-hub"
+Issues = "https://github.com/SergioNotionHQ/dynafold-hub/issues"
+
+[tool.poetry]
+packages = [{include = "dynafold_hub", from = "src"}]
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=7.4.0"
+pytest-cov = ">=4.1.0"
+pytest-asyncio = ">=0.23.0"
+black = ">=24.1.0"
+ruff = ">=0.1.14"
+mypy = ">=1.8.0"
+pre-commit = ">=3.6.0"
+ipykernel = ">=6.29.0"
+types-requests = ">=2.31.0"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "SIM"]
+ignore = [
+    "E501",   # Line too long (handled by black)
+    "B008",   # Function call in default arg (required for typer.Option)
+    "B024",   # ABC without abstract methods (allowed for our base class)
+    "UP042",  # StrEnum (we support 3.11 which works fine without it)
+    "B905",   # zip without strict (over-pedantic for our use cases)
+    "SIM102", # Nested ifs (sometimes clearer than combined)
+]
+
+[tool.mypy]
+python_version = "3.11"
+strict = false
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "requires_gpu: requires GPU to run",
+    "requires_network: requires network access",
+]
+addopts = "-v --tb=short"
+
+[tool.coverage.run]
+source = ["src/dynafold_hub"]
+omit = ["*/tests/*", "*/test_*.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]
