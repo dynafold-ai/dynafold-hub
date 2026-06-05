@@ -1,6 +1,4 @@
 # DYNAFOLD Hub — HuggingFace Spaces Dockerfile
-# Hosts the Streamlit web app at port 7860 (HF Spaces standard)
-
 FROM python:3.11-slim
 
 WORKDIR /app
@@ -15,18 +13,20 @@ COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
+# Application code
 COPY src/ /app/src/
 COPY pages/ /app/pages/
 COPY examples/ /app/examples/
 COPY streamlit_app.py /app/streamlit_app.py
+COPY .streamlit/ /app/.streamlit/
 
-# HuggingFace Spaces expects the app on port 7860
 EXPOSE 7860
 
-# Run Streamlit
+# Run Streamlit with explicit settings for HF Spaces compatibility
 CMD ["streamlit", "run", "streamlit_app.py", \
      "--server.port=7860", \
      "--server.address=0.0.0.0", \
      "--server.headless=true", \
+     "--server.enableXsrfProtection=false", \
+     "--server.enableCORS=false", \
      "--browser.gatherUsageStats=false"]
