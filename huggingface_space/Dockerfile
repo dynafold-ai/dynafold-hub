@@ -17,6 +17,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
 
 # Copy application code
 COPY src/ /app/src/
+COPY pages/ /app/pages/
 COPY examples/ /app/examples/
 COPY streamlit_app.py /app/streamlit_app.py
 
